@@ -15,7 +15,11 @@ jobs:
           sudo apt-get install -y lld
           curl -fsSL "https://github.com/kojix2/wasm-libs/releases/download/v0.0.4/wasm32-wasi-libs.tar.gz" -o /tmp/wasm32-wasi-libs.tar.gz
           tar -xzf /tmp/wasm32-wasi-libs.tar.gz
-          CRYSTAL_LIBRARY_PATH="$PWD/wasm32-wasi-libs" crystal build prime.cr -o web/prime.wasm --target wasm32-wasi
+          curl -fsSL "https://github.com/kojix2/wasm-libs/releases/download/v0.0.4/wasm32-wasi-sysroot.tar.gz" -o /tmp/wasm32-wasi-sysroot.tar.gz
+          tar -xzf /tmp/wasm32-wasi-sysroot.tar.gz
+          WASI_SYSROOT="$PWD/wasm32-wasi-sysroot" \
+          CRYSTAL_LIBRARY_PATH="$PWD/wasm32-wasi-libs:$PWD/wasm32-wasi-sysroot/lib/wasm32-wasi" \
+          crystal build prime.cr -o web/prime.wasm --target wasm32-wasi
 
   deploy:
     needs: build
