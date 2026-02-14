@@ -1,0 +1,23 @@
+name: Build and Deploy Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: crystal-lang/install-crystal@v1
+      - run: |
+          curl -fsSL "https://github.com/kojix2/wasm-libs/releases/download/v0.0.4/wasm32-wasi-libs.tar.gz" -o /tmp/wasm32-wasi-libs.tar.gz
+          tar -xzf /tmp/wasm32-wasi-libs.tar.gz
+          CRYSTAL_LIBRARY_PATH="$PWD/wasm32-wasi-libs" crystal build prime.cr -o web/prime.wasm --target wasm32-wasi
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
