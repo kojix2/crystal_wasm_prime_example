@@ -21,7 +21,7 @@ jobs:
           tar -xzf /tmp/wasm32-wasi-sysroot.tar.gz
           CRYSTAL_LIBRARY_PATH="$PWD/wasm32-wasi-libs:$PWD/wasm32-wasi-sysroot/lib/wasm32-wasi" \
           crystal build prime.cr -o web/prime.wasm --target wasm32-wasi
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: web
 
